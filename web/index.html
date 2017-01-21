@@ -2,28 +2,19 @@
 	<title>Fanfiction Downloader</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- CSS -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" type="text/css" href="js/material.min.css"/>
 	<style>
-	.demo-layout-transparent {
-	  background: url('./img/bg.jpg');
-	  background-repeat: repeat;
-	}
-	.demo-layout-transparent .mdl-layout__header,
-	.demo-layout-transparent .mdl-layout__drawer-button {
-	  /* This background is dark, so we set text to white. Use 87% black instead if
-	     your background is light. */
-	  color: white;
-	}
 	</style>
 	<!-- JS -->
 	<script type="text/javascript" src="js/material.min.js"></script>
 	<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
-	<script type="text/javascript" src="app.js"></script>
 </head><body>
-	<div class="demo-layout-transparent mdl-layout mdl-js-layout">
-		<header class="mdl-layout__header mdl-layout__header--transparent">
+	<div class="mdl-layout mdl-js-layout">
+		<!--
+		<header class="mdl-layout__header">
 			<div class="mdl-layout__header-row">
-				<span class="mdl-layout-title">Title</span>
+				<span class="mdl-layout-title">Home</span>
 				<div class="mdl-layout-spacer"></div>
 				<nav class="mdl-navigation">
 					<a class="mdl-navigation__link" href="">Link</a>
@@ -31,17 +22,39 @@
 			</div>
 		</header>
 		<div class="mdl-layout__drawer">
-			<span class="mdl-layout-title">Title</span>
+			<span class="mdl-layout-title">Home</span>
 			<nav class="mdl-navigation">
 				<a class="mdl-navigation__link" href="">Link</a>
 			</nav>
 		</div>
-		<main class="mdl-layout__content">
-			<h3>Over here!</h3>
-			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-				<input class="mdl-textfield__input" type="text" id="ffn_url" pattern="[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)">
-				<label class="mdl-textfield__label" for="ffn_url">Fanfic URL</label>
-				<span class="mdl-textfield__error">Valid URL only</span>
+		TODO: Jumbotron or such
+		-->
+		<main class="mdl-layout__content mdl-typography--text-center">
+			<h3>Fanfiction Downloader</h3>
+			<div class="mdl-card mdl-shadow--2dp" style="width: 512px; display:inline-block;">
+				<div class="mdl-card__title" style="color: #fff; height: 66px; background:rgba(2,100,2,0.8);">
+					<h2 class="mdl-card__title-text">Welcome</h2>
+				</div>
+				<div class="mdl-card__supporting-text">
+					Enter the URL and we'll take care of the rest.
+				</div>
+				<div class="mdl-card__actions mdl-card--border">
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						<input class="mdl-textfield__input" type="text" id="ffn_url" pattern="(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})">
+						<label class="mdl-textfield__label" for="ffn_url">Fanfic URL</label>
+						<span class="mdl-textfield__error">Valid URL only</span>
+					</div>
+					<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+						Download
+					</a>
+					<div id="progress_area">
+						<div id="progress_bar" class="mdl-progress mdl-js-progress" style="width:83%; display:inline-block;">
+						</div>
+						<br /><br />
+						<span>Downloading chapter %d...</span>
+						<br />
+					</div>
+				</div>
 			</div>
 		</main>
 	</div>
@@ -60,4 +73,5 @@
 	</div>
 -->
 	</div>
+<script type="text/javascript" src="app.js"></script>
 </body></html>

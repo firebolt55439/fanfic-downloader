@@ -1,14 +1,25 @@
 <html><head>
 	<title>Fanfiction Downloader</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- TODO: Author, description, SEO, etc. -->
+	<!-- Kill cache -->
+	<meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+	<meta http-equiv="pragma" content="no-cache" />
 	<!-- CSS -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" type="text/css" href="js/material.min.css"/>
 	<style>
+	.mdl-tooltip { /* fix blurry tooltips on Chrome 53 */
+	    will-change: unset;
+	}
 	</style>
 	<!-- JS -->
+	<script type="text/javascript" src="js/subworkers.js"></script>
 	<script type="text/javascript" src="js/material.min.js"></script>
-	<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
 </head><body>
 	<div class="mdl-layout mdl-js-layout">
 		<!--
@@ -31,6 +42,33 @@
 		-->
 		<main class="mdl-layout__content mdl-typography--text-center">
 			<h3>Fanfiction Downloader</h3>
+			<div id="unsupported_div" style="display: none;">
+				<div class="mdl-card mdl-shadow--2dp" style="width: 420px; height: 210px; display:inline-block;">
+					<div class="mdl-card__title" style="color: white; background: rgba(200, 2, 5, 0.8);">
+						<h2 class="mdl-card__title-text">Unsupported Browser</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						Unfortunately your browser is not supported. Try using a recent
+						version of Google Chrome, Apple Safari, or Mozilla Firefox instead.
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised" href="https://google.com/chrome">
+							Chrome
+						</a>&nbsp;
+						<a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised" href="https://apple.com/safari">
+							Safari
+						</a>&nbsp;
+						<a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised" href="https://www.mozilla.org/en-US/firefox/new/">
+							Firefox
+						</a>
+					</div>
+					<div class="mdl-card__menu">
+						<a class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+							<i class="material-icons">error</i>
+						</a>
+					</div>
+				</div><br /><br />
+			</div>
 			<div class="mdl-card mdl-shadow--2dp" style="width: 512px; display:inline-block;">
 				<div class="mdl-card__title" style="color: #fff; height: 66px; background:rgba(2,100,2,0.8);">
 					<h2 class="mdl-card__title-text">Welcome</h2>
@@ -39,24 +77,35 @@
 					Enter the URL and we'll take care of the rest.
 				</div>
 				<div class="mdl-card__actions mdl-card--border">
+					<ul class="mdl-list" id="story-info-list" style="display: none; margin-top: 0px;"></ul>
 					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 						<input class="mdl-textfield__input" type="text" id="ffn_url" pattern="(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})">
 						<label class="mdl-textfield__label" for="ffn_url">Fanfic URL</label>
 						<span class="mdl-textfield__error">Valid URL only</span>
 					</div>
-					<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+					<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" id="download_btn">
 						Download
 					</a>
+					<div class="mdl-tooltip" for="download_btn">
+						Download as EPUB
+					</div>
 					<div id="progress_area">
 						<div id="progress_bar" class="mdl-progress mdl-js-progress" style="width:83%; display:inline-block;">
 						</div>
+						<div id="progress_bar_indet" class="mdl-progress mdl-js-progress mdl-progress__indeterminate" style="width:83%; display:inline-block;">
+						</div>
+						<i class="material-icons" id="checkmark" style="display: none;">check</i>
 						<br /><br />
-						<span>Downloading chapter %d...</span>
+						<span id="progress_status"></span>
 						<br />
 					</div>
 				</div>
 			</div>
 		</main>
+		<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+			<div class="mdl-snackbar__text"></div>
+			<button class="mdl-snackbar__action" type="button"></button>
+		</div>
 	</div>
 
 	<!--

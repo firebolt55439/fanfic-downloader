@@ -14,4 +14,4 @@ Warning: this downloader makes it all too easy to get addicted to fanfiction :).
 Want to look under the hood? Need to report a bug? Want a new feature implemented? Check out the
 project on [Github](https://github.com/firebolt55439/fanfic-downloader) or [open an issue](https://github.com/firebolt55439/fanfic-downloader/issues). I'm completely open to contributions
 in the form of [pull requests](https://github.com/firebolt55439/fanfic-downloader/pulls) and will review
-them with all due haste.
+them as soon as possible.

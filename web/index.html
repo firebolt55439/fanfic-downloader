@@ -15,6 +15,16 @@
 	.mdl-tooltip { /* fix blurry tooltips on Chrome 53 */
 	    will-change: unset;
 	}
+	@media (max-width: 512px) {
+		.download-card {
+			width: 100%;
+		}
+	}
+	@media (min-width: 512px) {
+		.download-card {
+			width: 512px;
+		}
+	}
 	</style>
 	<!-- JS -->
 	<script type="text/javascript" src="js/subworkers.js"></script>
@@ -69,7 +79,7 @@
 					</div>
 				</div><br /><br />
 			</div>
-			<div class="mdl-card mdl-shadow--2dp" style="width: 512px; display:inline-block;">
+			<div class="mdl-card mdl-shadow--2dp download-card" style="display:inline-block;">
 				<div class="mdl-card__title" style="color: #fff; height: 66px; background:rgba(2,100,2,0.8);">
 					<h2 class="mdl-card__title-text">Welcome</h2>
 				</div>

@@ -92,16 +92,29 @@ worker.onmessage = function(evt){
 
 // Install click handler on download button.
 $('#download_btn').click(function() {
+	// Don't execute handler if button is disabled.
 	if($(this).attr('disabled')) return;
+
+	// Reset progress elements.
 	document.querySelector('#progress_bar').MaterialProgress.setProgress(0);
 	$('#progress_area').show();
 	$('#checkmark').hide();
 	$('#progress_bar_indet').hide();
 	$('#progress_bar').show();
+
+	// Sanitize the story url.
+	var ffn_url = $('#ffn_url').val();
+	if(ffn_url.indexOf("www.") == 0){
+		ffn_url = "http://" + ffn_url;
+	}
+
+	// Send background worker the task.
 	worker.postMessage([
 		"story_url",
-		$('#ffn_url').val()
+		ffn_url
 	]);
+
+	// Update progress elements.
 	$('#progress_status').text("Initializing...");
 	$('#download_btn').attr('disabled', ''); // disable download button so no race conditions (e.g. submit while working)
 });

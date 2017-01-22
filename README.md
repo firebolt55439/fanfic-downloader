@@ -9,7 +9,7 @@ zip file creation as well as downloading, using HTML5 Blobs, eliminating unneces
 
 Warning: this downloader makes it all too easy to get addicted to fanfiction :).
 
-### Support or Contact
+## Support or Contact
 
 Want to look under the hood? Need to report a bug? Want a new feature implemented? Check out the
 project on [Github](https://github.com/firebolt55439/fanfic-downloader) or [open an issue](https://github.com/firebolt55439/fanfic-downloader/issues). I'm completely open to contributions

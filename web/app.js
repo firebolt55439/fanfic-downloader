@@ -30,6 +30,7 @@ function downloadURI(uri, name) {
 // Initialize web worker.
 var worker;
 worker = new Worker("worker.js");
+var story_counter = 0;
 worker.onmessage = function(evt){
 	var data = evt.data;
 	var type = data[0];
@@ -46,9 +47,13 @@ worker.onmessage = function(evt){
 				<span>' + header["author"] + ' - ' + header["title"] + '</span> \
 				<span class="mdl-list__item-text-body" style="">' + header["summary"] + '</span> \
 			</span> \
+			<a class="mdl-list__item-secondary-action mdl-color-text--green" id="__story_info_' + story_counter + '" href="#" style="display: none;"> \
+			  <i class="material-icons">check</i> \
+			</a> \
 		</li>';
 		$(html).appendTo($('#story-info-list'));
 		$('#story-info-list').show();
+		++story_counter;
 	} else if(type == "start_stage_2"){
 		$('#progress_bar').hide();
 		$('#progress_bar_indet').show();
@@ -59,6 +64,7 @@ worker.onmessage = function(evt){
 		$('#checkmark').show();
 		$('#progress_status').text("Done!");
 		$('#download_btn').removeAttr('disabled');
+		$('#__story_info_' + (story_counter - 1)).show();
 	} else if(type == "status_update"){
 		$('#progress_status').text(data[1]);
 	} else if(type == "error"){

@@ -287,7 +287,7 @@ handle_story = function(story_url) {
 	});
 }
 
-var CROSS_ORIGIN_PROXY = "https://crossorigin.me/";
+var CROSS_ORIGIN_PROXY = "http://cors-fanfic-proxy.herokuapp.com/";//"https://crossorigin.me/";
 
 // Downloader for (m.)fanfiction.net.
 handle_ffnet = function(parsed){

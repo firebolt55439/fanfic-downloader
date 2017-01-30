@@ -89,10 +89,21 @@ worker.onmessage = function(evt){
 		}, 10);
 	} else if(type == "download_data_url"){
 		var data_url = data[1];
-		setTimeout(function() {
-			downloadURI(data_url, "story.epub");
-			URL.revokeObjectURL(data_url);
-		}, 20);
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', data_url, true);
+		xhr.responseType = 'blob';
+		xhr.onload = function(e) {
+			if (this.status == 200) {
+				var myBlob = this.response;
+				URL.revokeObjectURL(data_url);
+				// myBlob is now the blob that the object URL pointed to.
+				setTimeout(function() {
+					//downloadURI(data_url, "story.epub");
+					saveAs(myBlob, "story.epub");
+				}, 20);
+			}
+		};
+		xhr.send();
 	}
 }
 

@@ -8,6 +8,17 @@ importScripts("js/zip-js/zip-fs.js");
 // Initialize zip.js.
 zip.workerScriptsPath = "js/zip-js/";
 
+// Initialize Firebase.
+importScripts("https://www.gstatic.com/firebasejs/3.6.10/firebase.js");
+var config = {
+  apiKey: "AIzaSyCb9pGbRDoyWyrqmr41Yy6IEB-SRfnPoaQ",
+  authDomain: "fanfic-downloader.firebaseapp.com",
+  databaseURL: "https://fanfic-downloader.firebaseio.com",
+  storageBucket: "fanfic-downloader.appspot.com",
+  messagingSenderId: "419914920298"
+};
+firebase.initializeApp(config);
+
 // Initialize onmessage handler.
 onmessage = function(evt){
 	//console.log(evt);
@@ -280,7 +291,35 @@ handle_story = function(story_url) {
 		meta_inf_folder.file(on[0], on[1]);
 	}
 	jzip.file("mimetype", "application/epub+zip");
+	var guid = function() {
+		// From http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript.
+		function s4() {
+			return Math.floor((1 + Math.random()) * 0x10000)
+			.toString(16)
+			.substring(1);
+		}
+		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+	};
 	jzip.generateAsync({type:"blob"}).then(function(blob){
+		// Create a file reference.
+		var storageRef = firebase.storage().ref().child("fanfics");
+		var dirRef = storageRef.child(guid());
+		var filename = header["author"] + " - " + header["title"] + ".epub";
+		var fileRef = storageRef.child(filename);
+		var uploadTask = fileRef.put(blob);
+		postMessage(["start_stage_3", ""]);
+		uploadTask.on('state_changed', function(snapshot) {
+			var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+			postMessage(["upload_progress_update", progress]);
+		}, function(error) {
+			postMessage(["error", error]);
+		}, function() {
+			postMessage(["success"]);
+			setTimeout(function() {
+				postMessage(["download_url", uploadTask.snapshot.downloadURL]);
+			}, 150);
+		});
+
 		// Export the file to a data URI and pass it to the front-end.
 		/*
 		fs.importBlob(blob, function() {
@@ -292,12 +331,14 @@ handle_story = function(story_url) {
 			});
 		});
 		*/
+		/*
 		blobToDataURL(blob, function(data_url){
 			postMessage(["success"]);
 			setTimeout(function() {
 				postMessage(["download_data_url", data_url]);
 			}, 150);
 		});
+		*/
 	});
 }
 

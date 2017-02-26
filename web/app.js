@@ -58,6 +58,13 @@ worker.onmessage = function(evt){
 		$('#progress_bar').hide();
 		$('#progress_bar_indet').show();
 		$('#progress_status').text("Packaging story...");
+	} else if(type == "start_stage_3"){
+		$('#progress_bar').show();
+		$('#progress_bar_indet').hide();
+		$('#progress_status').text("Uploading file to storage...");
+	} else if(type == "upload_progress_update"){
+		var new_progress_percent = data[1];
+		document.querySelector('#progress_bar').MaterialProgress.setProgress(new_progress_percent);
 	} else if(type == "success"){
 		$('#progress_bar').hide();
 		$('#progress_bar_indet').hide();
@@ -87,7 +94,7 @@ worker.onmessage = function(evt){
 			$('#progress_bar_indet').hide();
 			$('#progress_status').text("An error occurred.");
 		}, 10);
-	} else if(type == "download_data_url"){
+	} else if(type == "download_url"){
 		var data_url = data[1];
 		downloadURI(data_url, "story.epub");
 		/*

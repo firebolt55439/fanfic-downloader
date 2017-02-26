@@ -301,13 +301,27 @@ handle_story = function(story_url) {
 		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 	};
 	jzip.generateAsync({type:"blob"}).then(function(blob){
+		// Update interface.
+		postMessage(["start_stage_3", ""]);
+
 		// Create a file reference.
 		var storageRef = firebase.storage().ref().child("fanfics");
 		var dirRef = storageRef.child(guid());
 		var filename = header["author"] + " - " + header["title"] + ".epub";
-		var fileRef = storageRef.child(filename);
+		var fileRef = dirRef.child(filename);
+
+		// Create a database entry.
+		var newPostKey = firebase.database().ref().child('fanfics').push().key;
+		var updates = {};
+		updates['/fanfics/' + newPostKey] = {
+			"id": newPostKey,
+			"timestamp": Date.now(),
+			"path": fileRef.fullPath
+		};
+		firebase.database().ref().update(updates);
+
+		// Start upload task.
 		var uploadTask = fileRef.put(blob);
-		postMessage(["start_stage_3", ""]);
 		uploadTask.on('state_changed', function(snapshot) {
 			var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 			postMessage(["upload_progress_update", progress]);
@@ -317,6 +331,35 @@ handle_story = function(story_url) {
 			postMessage(["success"]);
 			setTimeout(function() {
 				postMessage(["download_url", uploadTask.snapshot.downloadURL]);
+				setTimeout(function() {
+					// Get a list of old file entries and delete them and their corresponding entries.
+					var timeout_mins = 15.0;
+					var oldFilesList = firebase.database()
+						.ref("/fanfics")
+						.orderByChild("timestamp")
+						.endAt(Date.now() - (timeout_mins * 60e3))
+						.on("value", function(snapshot) {
+							var val = snapshot.val() || [];
+							//console.log(val);
+							var storageRef = firebase.storage().ref();
+							for(var key in val){
+								var on = val[key];
+								//console.log(val[key]);
+								var deleteRef = storageRef.child(on.path);
+								deleteRef.delete()
+									.then(function() {
+										console.log("Deleted old file at path:", on.path);
+										firebase.database().ref().child("/fanfics/" + key).remove();
+									})
+									.catch(function(error) {
+										console.log("Could not delete old file at path:", on.path, error);
+										firebase.database().ref().child("/fanfics/" + key).remove(); // remove entry anyway
+									})
+								;
+							}
+						})
+					;
+				}, 100);
 			}, 150);
 		});
 

@@ -89,6 +89,8 @@ worker.onmessage = function(evt){
 		}, 10);
 	} else if(type == "download_data_url"){
 		var data_url = data[1];
+		downloadURI(data_url, "story.epub");
+		/*
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', data_url, true);
 		xhr.responseType = 'blob';
@@ -104,6 +106,7 @@ worker.onmessage = function(evt){
 			}
 		};
 		xhr.send();
+		*/
 	}
 }
 

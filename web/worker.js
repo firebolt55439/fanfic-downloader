@@ -55,6 +55,12 @@ function postStatus(msg){
 	]);
 }
 
+function blobToDataURL(blob, callback) {
+    var a = new FileReader();
+    a.onload = function(e) {callback(e.target.result);}
+    a.readAsDataURL(blob);
+}
+
 // Define main "workhorse" functions.
 var handle_ffnet;
 handle_story = function(story_url) {
@@ -276,6 +282,7 @@ handle_story = function(story_url) {
 	jzip.file("mimetype", "application/epub+zip");
 	jzip.generateAsync({type:"blob"}).then(function(blob){
 		// Export the file to a data URI and pass it to the front-end.
+		/*
 		fs.importBlob(blob, function() {
 			fs.exportData64URI(function(data_url) {
 				postMessage(["success"]);
@@ -283,6 +290,13 @@ handle_story = function(story_url) {
 					postMessage(["download_data_url", URL.createObjectURL(blob)]);
 				}, 150);
 			});
+		});
+		*/
+		blobToDataURL(blob, function(data_url){
+			postMessage(["success"]);
+			setTimeout(function() {
+				postMessage(["download_data_url", data_url]);
+			}, 150);
 		});
 	});
 }

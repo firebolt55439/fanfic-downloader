@@ -29,7 +29,7 @@ function downloadURI(uri, name) {
 
 // Initialize web worker.
 var worker;
-worker = new Worker("worker.js");
+worker = new Worker("worker.js?version=0.0.1");
 var story_counter = 0;
 worker.onmessage = function(evt){
 	var data = evt.data;
@@ -61,7 +61,7 @@ worker.onmessage = function(evt){
 	} else if(type == "start_stage_3"){
 		$('#progress_bar').show();
 		$('#progress_bar_indet').hide();
-		$('#progress_status').text("Uploading file to storage...");
+		$('#progress_status').text("Uploading file for retrieval...");
 	} else if(type == "upload_progress_update"){
 		var new_progress_percent = data[1];
 		document.querySelector('#progress_bar').MaterialProgress.setProgress(new_progress_percent);

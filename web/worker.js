@@ -387,6 +387,18 @@ handle_story = function(story_url) {
 
 var CROSS_ORIGIN_PROXY = "https://cors-fanfic-proxy.herokuapp.com/";//"https://crossorigin.me/";
 
+function escapeHtml(unsafe) {
+	// From http://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript.
+    return unsafe
+         .replace(/&/g, "&amp;")
+         //.replace(/</g, "&lt;")
+         //.replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;")
+		 .replace(/<hr size=1 noshade>/g, "<hr size=\"1\" />")
+	;
+ }
+
 // Downloader for (m.)fanfiction.net.
 handle_ffnet = function(parsed){
 	// Extract story ID from URL.
@@ -411,11 +423,11 @@ handle_ffnet = function(parsed){
 
 			// Scrape the html for story information.
 			var body = data;
-			header["title"] = getBetween(body, "<b class='xcontrast_txt'>", "</b>");
+			header["title"] = escapeHtml(getBetween(body, "<b class='xcontrast_txt'>", "</b>"));
 			body = body.slice(body.indexOf("<a class='xcontrast_txt' href='/u/") + ("<a class='xcontrast_txt' href='/u/").length);
-			header["author"] = getBetween(body, "'>", "</a>");
+			header["author"] = escapeHtml(getBetween(body, "'>", "</a>"));
 			body = body.slice(body.indexOf("<div") + 4);
-			header["summary"] = getBetween(body, "'>", "</div>");
+			header["summary"] = escapeHtml(getBetween(body, "'>", "</div>"));
 			body = data;
 			header["chapter_titles"] = [];
 
@@ -428,7 +440,7 @@ handle_ffnet = function(parsed){
 				if(val.indexOf("</select") !== -1){
 					val = val.split("</select")[0];
 				}
-				header["chapter_titles"].push(val);
+				header["chapter_titles"].push(escapeHtml(val));
 			}
 			if(header["chapter_titles"].length == 0){
 				// If no chapter titles found, assume only one chapter in story.
@@ -438,7 +450,7 @@ handle_ffnet = function(parsed){
 
 			// Save chapter text.
 			// ch_text = get_between(body, "id='storytext'>", "</div>")
-			chapter_texts.push(getBetween(body, "id='storytext'>", "</div>"));
+			chapter_texts.push(escapeHtml(getBetween(body, "id='storytext'>", "</div>")));
 		}
 	};
 	xhttp.open("GET", info_url, /*async=*/false);
@@ -468,7 +480,7 @@ handle_ffnet = function(parsed){
 		xhttp.onreadystatechange = function() {
 			if(this.readyState == 4 && this.status == 200) {
 				var data = this.responseText;
-				chapter_texts.push(getBetween(data, "id='storytext'>", "</div>"));
+				chapter_texts.push(escapeHtml(getBetween(data, "id='storytext'>", "</div>")));
 				console.log("Downloaded page of length %d and chapter of length %d.", data.length,
 				chapter_texts[chapter_texts.length - 1].length);
 			}

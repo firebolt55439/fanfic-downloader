@@ -400,6 +400,17 @@ function escapeHtml(unsafe) {
  }
 
 function purifyHtml(html){
+	html = html.replace(/<[^>]+>/g, function(w) {
+		var myarray = w.split(" ");
+		for (var i=0; i < myarray.length; i++) {
+			// replace element name
+			myarray[i] = myarray[i].replace(/<\/?.+/, function(x) { return x.toLowerCase() });
+			// replace attribute names
+			myarray[i] = myarray[i].replace(/[^=]+=/, function(y) { return y.toLowerCase() });
+		}
+		w = myarray.join(" ");
+		return w;
+	});
 	return XHTMLPurifier.purify(html);
 }
 
@@ -455,7 +466,7 @@ handle_ffnet = function(parsed){
 			// Save chapter text.
 			// ch_text = get_between(body, "id='storytext'>", "</div>")
 
-			chapter_texts.push(purifyHtml(escapeHtml(getBetween(body, "id='storytext'>", "</div>"))));
+			chapter_texts.push(purifyHtml(getBetween(body, "id='storytext'>", "</div>")));
 		}
 	};
 	xhttp.open("GET", info_url, /*async=*/false);
@@ -485,7 +496,7 @@ handle_ffnet = function(parsed){
 		xhttp.onreadystatechange = function() {
 			if(this.readyState == 4 && this.status == 200) {
 				var data = this.responseText;
-				chapter_texts.push(escapeHtml(getBetween(data, "id='storytext'>", "</div>")));
+				chapter_texts.push(purifyHtml(getBetween(data, "id='storytext'>", "</div>")));
 				console.log("Downloaded page of length %d and chapter of length %d.", data.length,
 				chapter_texts[chapter_texts.length - 1].length);
 			}

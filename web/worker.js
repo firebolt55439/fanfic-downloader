@@ -4,6 +4,7 @@ importScripts("js/subworkers.js");
 importScripts("js/jszip.min.js");
 importScripts("js/zip-js/zip.js");
 importScripts("js/zip-js/zip-fs.js");
+importScripts("js/xhtml-purifier.js");
 
 // Initialize zip.js.
 zip.workerScriptsPath = "js/zip-js/";
@@ -395,9 +396,12 @@ function escapeHtml(unsafe) {
          //.replace(/>/g, "&gt;")
          .replace(/"/g, "&quot;")
          .replace(/'/g, "&#039;")
-		 .replace(/<hr size=1 noshade>/g, "<hr size=\"1\" />")
 	;
  }
+
+function purifyHtml(html){
+	return XHTMLPurifier.purify(html);
+}
 
 // Downloader for (m.)fanfiction.net.
 handle_ffnet = function(parsed){
@@ -450,7 +454,8 @@ handle_ffnet = function(parsed){
 
 			// Save chapter text.
 			// ch_text = get_between(body, "id='storytext'>", "</div>")
-			chapter_texts.push(escapeHtml(getBetween(body, "id='storytext'>", "</div>")));
+
+			chapter_texts.push(purifyHtml(escapeHtml(getBetween(body, "id='storytext'>", "</div>"))));
 		}
 	};
 	xhttp.open("GET", info_url, /*async=*/false);

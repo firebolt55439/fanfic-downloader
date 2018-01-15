@@ -29,7 +29,7 @@ function downloadURI(uri, name) {
 
 // Initialize web worker.
 var worker;
-worker = new Worker("worker.js?version=0.0.1");
+worker = new Worker("worker.js?version=0.0.2");
 var story_counter = 0;
 worker.onmessage = function(evt){
 	var data = evt.data;

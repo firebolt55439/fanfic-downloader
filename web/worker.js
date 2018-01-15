@@ -460,6 +460,21 @@ handle_ffnet = function(parsed){
 			if(header["chapter_titles"].length == 0){
 				// If no chapter titles found, assume only one chapter in story.
 				header["chapter_titles"] = [header["title"]];
+			} else {
+				var numbered = true;
+				for(var i = 0; i < header["chapter_titles"].length; i++){
+					var ch_on = header["chapter_titles"][i];
+					if(!ch_on.includes(".")){
+						numbered = false;
+						break;
+					}
+				}
+				if(numbered){
+					for(var i = 0; i < header["chapter_titles"].length; i++){
+						var ch_on = header["chapter_titles"][i];;
+						header["chapter_titles"][i] = ch_on.split(".")[1].trim();
+					}
+				}
 			}
 			console.log(header);
 

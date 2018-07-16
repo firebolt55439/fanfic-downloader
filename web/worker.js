@@ -10,6 +10,7 @@ importScripts("js/xhtml-purifier.js");
 zip.workerScriptsPath = "js/zip-js/";
 
 // Initialize Firebase.
+/*
 importScripts("https://www.gstatic.com/firebasejs/3.6.10/firebase.js");
 var config = {
   apiKey: "AIzaSyCb9pGbRDoyWyrqmr41Yy6IEB-SRfnPoaQ",
@@ -19,6 +20,7 @@ var config = {
   messagingSenderId: "419914920298"
 };
 firebase.initializeApp(config);
+*/
 
 // Initialize onmessage handler.
 onmessage = function(evt){
@@ -302,6 +304,7 @@ handle_story = function(story_url) {
 		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 	};
 	jzip.generateAsync({type:"blob"}).then(function(blob){
+		/*
 		// Update interface.
 		postMessage(["start_stage_3", ""]);
 
@@ -363,6 +366,7 @@ handle_story = function(story_url) {
 				}, 100);
 			}, 150);
 		});
+		*/
 
 		// Export the file to a data URI and pass it to the front-end.
 		/*
@@ -383,10 +387,37 @@ handle_story = function(story_url) {
 			}, 150);
 		});
 		*/
+		var reader = new FileReader();
+		reader.readAsDataURL(blob);
+		reader.onloadend = function() {
+			var b64data = reader.result;
+			var href = "data:application/epub+zip" + b64data.slice(b64data.search(/[;]/));
+			postMessage(["success"]);
+			postMessage(["download_url", href]);
+		}
 	});
-}
+};
 
-var CROSS_ORIGIN_PROXY = "https://cors-fanfic-proxy.herokuapp.com/";//"https://crossorigin.me/";
+// Enable CORS proxy
+(function() {
+    var cors_api_host = 'cors-anywhere.herokuapp.com';
+    var cors_api_url = 'https://' + cors_api_host + '/';
+    var slice = [].slice;
+    // var origin = window.location.protocol + '//' + window.location.host;
+    var origin = "";
+    var open = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function() {
+        var args = slice.call(arguments);
+        var targetOrigin = /^https?:\/\/([^\/]+)/i.exec(args[1]);
+        if (targetOrigin && targetOrigin[0].toLowerCase() !== origin && targetOrigin[1] !== cors_api_host) {
+            args[1] = cors_api_url + args[1];
+        }
+        return open.apply(this, args);
+    };
+})();
+
+// var CROSS_ORIGIN_PROXY = "https://cors-fanfic-proxy.herokuapp.com/";//"https://crossorigin.me/";
+var CROSS_ORIGIN_PROXY = "";
 
 function escapeHtml(unsafe) {
 	// From http://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript.
@@ -397,7 +428,7 @@ function escapeHtml(unsafe) {
          .replace(/"/g, "&quot;")
          .replace(/'/g, "&#039;")
 	;
- }
+}
 
 function purifyHtml(html){
 	html = html.replace(/<[^>]+>/g, function(w) {

@@ -96,6 +96,7 @@ worker.onmessage = function(evt){
 		}, 10);
 	} else if(type == "download_url"){
 		var data_url = data[1];
+		console.log(data);
 		downloadURI(data_url, "story.epub");
 		/*
 		var xhr = new XMLHttpRequest();

@@ -94,7 +94,7 @@ handle_story = function(story_url) {
 	// Pass off to programmatic switchboard by hostname.
 	var switchboard = [
 		["fanfiction.net", "m.fanfiction.net", handle_ffnet]
-	]
+	];
 	var domain = parsed.hostname;
 	if(domain.indexOf("www.") == 0){
 		domain = domain.slice(4);
@@ -472,6 +472,7 @@ handle_ffnet = function(parsed){
 	xhttp.onreadystatechange = function() {
 		if(this.readyState == 4 && this.status == 200) {
 			var data = this.responseText;
+			// console.log(data);
 
 			// Scrape the html for story information.
 			var body = data;
@@ -522,6 +523,7 @@ handle_ffnet = function(parsed){
 		}
 	};
 	xhttp.open("GET", info_url, /*async=*/false);
+	xhttp.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0)");
 	xhttp.send();
 
 	// Perform a sanity check.
@@ -554,6 +556,7 @@ handle_ffnet = function(parsed){
 			}
 		};
 		xhttp.open("GET", chapter_url, /*async=*/false);
+		xhttp.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0)");
 		xhttp.send();
 	}
 

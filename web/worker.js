@@ -427,9 +427,6 @@ function escapeHtml(unsafe) {
          //.replace(/>/g, "&gt;")
          .replace(/"/g, "&quot;")
          .replace(/'/g, "&#039;")
-         .replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i", function(match, p1, p2) {
-         	return `<${p1}${p2}>`;
-         });
 	;
 }
 
@@ -448,7 +445,7 @@ function purifyHtml(html){
 	html = html.replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i", function(match, p1, p2) {
 		return `<${p1}${p2}>`;
 	}); // strip all tag attributes
-	return XHTMLPurifier.purify(html);
+	return escapeHtml(XHTMLPurifier.purify(html));
 }
 
 // Downloader for (m.)fanfiction.net.

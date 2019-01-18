@@ -399,25 +399,25 @@ handle_story = function(story_url) {
 };
 
 // Enable CORS proxy
-(function() {
-    var cors_api_host = 'cors-anywhere.herokuapp.com';
-    var cors_api_url = 'https://' + cors_api_host + '/';
-    var slice = [].slice;
-    // var origin = window.location.protocol + '//' + window.location.host;
-    var origin = "";
-    var open = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.open = function() {
-        var args = slice.call(arguments);
-        var targetOrigin = /^https?:\/\/([^\/]+)/i.exec(args[1]);
-        if (targetOrigin && targetOrigin[0].toLowerCase() !== origin && targetOrigin[1] !== cors_api_host) {
-            args[1] = cors_api_url + args[1];
-        }
-        return open.apply(this, args);
-    };
-})();
+// (function() {
+//     var cors_api_host = 'cors-anywhere.herokuapp.com';
+//     var cors_api_url = 'https://' + cors_api_host + '/';
+//     var slice = [].slice;
+//     // var origin = window.location.protocol + '//' + window.location.host;
+//     var origin = "";
+//     var open = XMLHttpRequest.prototype.open;
+//     XMLHttpRequest.prototype.open = function() {
+//         var args = slice.call(arguments);
+//         var targetOrigin = /^https?:\/\/([^\/]+)/i.exec(args[1]);
+//         if (targetOrigin && targetOrigin[0].toLowerCase() !== origin && targetOrigin[1] !== cors_api_host) {
+//             args[1] = cors_api_url + args[1];
+//         }
+//         return open.apply(this, args);
+//     };
+// })();
 
 // var CROSS_ORIGIN_PROXY = "https://cors-fanfic-proxy.herokuapp.com/";//"https://crossorigin.me/";
-var CROSS_ORIGIN_PROXY = "";
+var CROSS_ORIGIN_PROXY = "http://cors.io/";
 
 function escapeHtml(unsafe) {
 	// From http://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript.
@@ -520,7 +520,7 @@ handle_ffnet = function(parsed){
 		}
 	};
 	xhttp.open("GET", info_url, /*async=*/false);
-	xhttp.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0)");
+	// xhttp.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0)");
 	xhttp.send();
 
 	// Perform a sanity check.

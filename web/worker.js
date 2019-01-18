@@ -417,7 +417,7 @@ handle_story = function(story_url) {
 // })();
 
 // var CROSS_ORIGIN_PROXY = "https://cors-fanfic-proxy.herokuapp.com/";//"https://crossorigin.me/";
-var CROSS_ORIGIN_PROXY = "http://cors.io/";
+var CROSS_ORIGIN_PROXY = "https://cors.io/";
 
 function escapeHtml(unsafe) {
 	// From http://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript.

@@ -33,7 +33,7 @@ onmessage = function(evt){
 			handle_story(url);
 		}, 10);
 	}
-}
+};
 
 // Define helper functions.
 function getLocation(href) {
@@ -417,7 +417,12 @@ handle_story = function(story_url) {
 // })();
 
 // var CROSS_ORIGIN_PROXY = "https://cors-fanfic-proxy.herokuapp.com/";//"https://crossorigin.me/";
-var CROSS_ORIGIN_PROXY = "https://cors.io/";
+// var CROSS_ORIGIN_PROXY = "https://cors.io/";
+var CROSS_ORIGIN_PROXY = "http://goxcors.appspot.com/cors?method=GET&url=";
+
+function get_cors(url) {
+	return CROSS_ORIGIN_PROXY + encodeURIComponent(url);
+}
 
 function escapeHtml(unsafe) {
 	// From http://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript.
@@ -462,7 +467,7 @@ handle_ffnet = function(parsed){
 
 	// Download description.
 	postStatus("Downloading story info...");
-	var info_url = CROSS_ORIGIN_PROXY + "https://www.fanfiction.net/s/" + story_id;
+	var info_url = get_cors("https://www.fanfiction.net/s/" + story_id);
 	var header = {};
 	var chapter_texts = [];
 	var xhttp = new XMLHttpRequest();
@@ -536,7 +541,7 @@ handle_ffnet = function(parsed){
 	var num_chapters = header["chapter_titles"].length;
 	for(var i = 1; i < num_chapters; i++){
 		var chapter_on = i + 1;
-		var chapter_url = CROSS_ORIGIN_PROXY + "https://www.fanfiction.net/s/" + story_id + "/" + chapter_on;
+		var chapter_url = get_cors("https://www.fanfiction.net/s/" + story_id + "/" + chapter_on);
 		postMessage([
 			"progress_update",
 			(chapter_on / num_chapters) * 100.0, // percent done

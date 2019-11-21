@@ -418,7 +418,7 @@ handle_story = function(story_url) {
 
 // var CROSS_ORIGIN_PROXY = "https://cors-fanfic-proxy.herokuapp.com/";//"https://crossorigin.me/";
 // var CROSS_ORIGIN_PROXY = "https://cors.io/";
-var CROSS_ORIGIN_PROXY = "http://goxcors.appspot.com/cors?method=GET&url=";
+var CROSS_ORIGIN_PROXY = "https://goxcors.appspot.com/cors?method=GET&url=";
 
 function get_cors(url) {
 	return CROSS_ORIGIN_PROXY + encodeURIComponent(url);
@@ -558,7 +558,7 @@ handle_ffnet = function(parsed){
 			}
 		};
 		xhttp.open("GET", chapter_url, /*async=*/false);
-		xhttp.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0)");
+		// xhttp.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0)");
 		xhttp.send();
 	}
 
